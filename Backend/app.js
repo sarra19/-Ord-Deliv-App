@@ -38,7 +38,12 @@ Connect()
 
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: 'GET , POST ,PUT ,DELETE',
+  allowedHeaders: 'Origin, X-Requested-With , Content-Type ,Accept ,Authorization ,Credentials',
+  credentials: true
+}));
 
 
 

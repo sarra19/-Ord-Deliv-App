@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Role = require('./role'); 
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const passwordComplexity = require("joi-password-complexity");
@@ -10,10 +9,8 @@ const userSchema = new Schema({
   nom: {type:String,required:true},
   email: {type:String,required:true},
   mdpass: {type:String,required:true},
-  role: {
-    type: String, 
-    enum: Role.validRoles,
-},
+  role: { type: String, enum: ['client', 'admin', 'livreur'], required: true }, // Ensure this field exists and is properly defined
+
   adresse: String,
   photoProfile: String,
   dateNaissance: String,
@@ -36,6 +33,8 @@ const validate = (data) => {
 		nom: Joi.string().required().label("Nom"),
 		email: Joi.string().email().required().label("Email"),
 		mdpass: passwordComplexity().required().label("Mot de passe"),
+    role: Joi.string().valid('client', 'admin', 'livreur').required()
+
 	});
 	return schema.validate(data);
 };
