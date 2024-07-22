@@ -16,6 +16,8 @@ const userSchema = new Schema({
   dateNaissance: String,
   tel: Number,
   Genre: String,
+  verified: { type: Boolean, default: false },
+
 
 });
 userSchema.methods.generateAuthToken = function () {

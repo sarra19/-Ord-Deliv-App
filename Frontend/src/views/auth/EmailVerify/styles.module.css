@@ -1,0 +1,26 @@
+/* styles.module.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .success_img {
+    width: 100px; /* Adjust as needed */
+    height: auto;
+  }
+  
+  .green_btn {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .green_btn:hover {
+    background-color: darkgreen;
+  }
+  

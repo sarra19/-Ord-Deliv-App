@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom'; 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useState } from "react";
+import styles from "./styles.module.css";
 
 export default function Register() {
   const history = useHistory();
@@ -24,6 +26,8 @@ export default function Register() {
       .matches(/[@$!%*?&#-]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
     role: Yup.string().oneOf(['client', 'admin', 'livreur'], 'Le rôle est requis').required('Rôle est requis'),
   });
+  const [error, setError] = useState("");
+	const [msg, setMsg] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -34,6 +38,7 @@ export default function Register() {
       role: '',
     },
     validationSchema: validationSchema,
+    
     onSubmit: async (values) => {
       try {
         const url = 'http://localhost:5000/api/user';
@@ -41,11 +46,13 @@ export default function Register() {
         history.push('/auth/login');
         alert('Inscription réussie !');
         console.log(res.message);
+        setMsg(res.message);
       } catch (error) {
         if (error.response) {
           if (error.response.status >= 400 && error.response.status < 500) {
             if (error.response.data.message) {
-              alert(error.response.data.message);
+             // alert(error.response.data.message);
+              setError(error.response.data.message);
             } else {
               alert('Vérifier vos champs');
             }
@@ -190,6 +197,8 @@ export default function Register() {
                     <div className="text-red-500 text-xs">{formik.errors.role}</div>
                   ) : null}
                 </div>
+                {error && <div className={styles.error_msg}>{error}</div>}
+						{msg && <div className={styles.success_msg}>{msg}</div>}
                 <div className="text-center mt-6">
                   <button
                     className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
