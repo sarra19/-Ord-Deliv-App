@@ -1141,12 +1141,12 @@ select {
 
 .bg-lightBlue-800 {
   --tw-bg-opacity: 1;
-  background-color: rgba(7, 89, 133, var(--tw-bg-opacity));
+  background-color: rgba(7, 75, 131, var(--tw-bg-opacity)); /* #074B83 in rgba */
 }
 
 .bg-lightBlue-900 {
   --tw-bg-opacity: 1;
-  background-color: rgba(12, 74, 110, var(--tw-bg-opacity));
+  background-color: rgba(12, 60, 110, var(--tw-bg-opacity)); /* #0C3C6E in rgba */
 }
 
 .bg-teal-200 {
@@ -2368,7 +2368,7 @@ select {
 
 .text-lightBlue-300 {
   --tw-text-opacity: 1;
-  color: rgba(125, 211, 252, var(--tw-text-opacity));
+  color: rgba(182, 222, 255, var(--tw-text-opacity));
 }
 
 .text-lightBlue-400 {
@@ -2388,7 +2388,7 @@ select {
 
 .text-Blue-600 {
   --tw-text-opacity: 1;
-  color: rgba(27, 30, 161, var(--tw-text-opacity));
+  color: rgba(7, 75, 131, var(--tw-text-opacity));
 }
 .text-teal-500 {
   --tw-text-opacity: 1;

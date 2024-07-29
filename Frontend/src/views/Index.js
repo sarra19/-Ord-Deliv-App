@@ -8,7 +8,7 @@ import Footer from "components/Footers/Footer.js";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import SpecialCase from "components/SpecialCase/SpecialCase";
 
-export default function Landing() {
+export default function Index() {
   return (
     <>
      <IndexNavbar fixed />

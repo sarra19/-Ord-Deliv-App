@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const Token = require("../model/token");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const mongoose = require("mongoose");
 
 async function register(req, res) {
   try {
@@ -35,35 +36,52 @@ async function register(req, res) {
 
     // Send verification email
     const url = `${process.env.BASE_URL}user/${newUser._id}/verify/${token.token}`;
-    await sendEmail(newUser.email, "Verify Email", url);
+    await sendEmail(newUser.email, "Vérifier votre adresse Email", url);
 
     // Respond with success message
-    res.status(201).send({ message: "An email has been sent to your account for verification." });
+    res.status(201).send({ message: "Un e-mail a été envoyé à votre compte pour vérification." });
   } catch (error) {
     console.error(error); // Log the error for debugging
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "Erreur interne du serveur" });
   }
 }
 
+
 async function verifToken(req, res) {
-	try {
-		const user = await User.findOne({ _id: req.params.id });
-		if (!user) return res.status(400).send({ message: "Invalid link" });
+  try {
+    // Validate the user ID format
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).send({ message: "user ID Invalid" });
+    }
 
-		const token = await Token.findOne({
-			userId: user._id,
-			token: req.params.token,
-		});
-		if (!token) return res.status(400).send({ message: "Invalid link" });
+    // Find the user by ID
+    const user = await User.findOne({ _id: req.params.id });
+    if (!user) {
+      return res.status(400).send({ message: "Lien invalide" });
+    }
 
-		await User.updateOne({ _id: user._id, verified: true });
-		await token.remove();
+    // Find the token associated with the user
+    const token = await Token.findOne({
+      userId: user._id,
+      token: req.params.token,
+    });
+    if (!token) {
+      return res.status(400).send({ message: "Lien invalide" });
+    }
 
-		res.status(200).send({ message: "Email verified successfully" });
-	} catch (error) {
-		res.status(500).send({ message: "Internal Server Error" });
-	}
-};
+    // Update the user to set verified to true
+    await User.updateOne({ _id: user._id }, { verified: true });
+
+    // Remove the token
+   // await token.remove();
+
+    // Send success response
+    res.status(200).send({ message: "E-mail vérifié avec succès" });
+  } catch (error) {
+    console.error("Erreur lors de la vérification du token", error); // Log the error for debugging
+    res.status(500).send({ message: "Erreur interne du serveur" });
+  }
+}
 
 
 async function add(req, res) {

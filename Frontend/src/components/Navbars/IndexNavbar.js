@@ -71,7 +71,7 @@ export default function Navbar(props) {
                 </a>
               </li>
               <li className="flex items-center">
-                <a href="/admin/dashboard" className="bg-indigo-700 text-white active:bg-lightBlue-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150">
+                <a href="/admin/tables" className="bg-lightBlue-800 text-white active:bg-lightBlue-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150">
                   <i className="fas fa-user-shield"></i> Admin
                 </a>
               </li>

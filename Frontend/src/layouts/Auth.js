@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
@@ -10,7 +11,9 @@ import FooterSmall from "components/Footers/FooterSmall.js";
 
 import Login from "views/auth/Login.js";
 import Register from "views/auth/Register.js";
-import Reset from "views/auth/Reset.js";
+import ForgotPassword from "views/auth/ResetPass/ForgotPassword";
+import PasswordReset from "views/auth/ResetPass/PasswordReset";
+
 
 export default function Auth() {
   return (
@@ -29,7 +32,9 @@ export default function Auth() {
           <Switch>
             <Route path="/auth/login" exact component={Login} />
             <Route path="/auth/register" exact component={Register} />
-            <Route path="/auth/reset" exact component={Reset} />
+            {/* <Route path="/auth/forgot-password"  exact component={ForgotPassword} />
+            <Route path="/auth/password-reset/:id/:token" exact component={PasswordReset} /> */}
+
             <Redirect from="/auth" to="/auth/login" />
           </Switch>
           <FooterSmall absolute />

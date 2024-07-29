@@ -1,40 +1,9 @@
 const router = require("express").Router();
-const { User } = require("../model/user");
-const bcrypt = require("bcrypt");
-const Joi = require("joi");
+const AuthController = require("../controller/authController");
 
-router.post("/", async (req, res) => {
-	try {
-		const { error } = validate(req.body);
-		if (error)
-			return res.status(400).send({ message: error.details[0].message });
 
-		const user = await User.findOne({ email: req.body.email });
-		if (!user)
-			return res.status(401).send({ message: "Invalid Email or Password" });
 
-		const validPassword = await bcrypt.compare(
-			req.body.mdpass,
-			user.mdpass
-		);
-		if (!validPassword)
-			return res.status(401).send({ message: "Invalid Email or Password" });
+router.post("/", AuthController.auth);
 
-		const token = user.generateAuthToken();
-		res.status(200).send({ data: token, message: "logged in successfully" });
-	} catch (error) {
-        console.error("Login Error:", error);
-
-		res.status(500).send({ message: "Internal Server Error" });
-	}
-});
-
-const validate = (data) => {
-	const schema = Joi.object({
-		email: Joi.string().email().required().label("Email"),
-		mdpass: Joi.string().required().label("Mot de passe"),
-	});
-	return schema.validate(data);
-};
 
 module.exports = router;

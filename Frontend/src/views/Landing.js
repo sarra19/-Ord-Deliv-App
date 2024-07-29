@@ -5,8 +5,9 @@ import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SpecialCase from "components/SpecialCase/SpecialCase";
+/* eslint-disable */
 
-export default function Index() {
+export default function Landing() {
   const slides = [
     { 
       title: "Boostez Votre Moto avec Nos Pièces ", 
@@ -46,7 +47,7 @@ export default function Index() {
                     href={slide.buttonLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-indigo-700 active:bg-lightBlue-600 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
+                    className="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-lightBlue-800 active:bg-lightBlue-600 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
                   >
                     {slide.buttonText}
                   </a>

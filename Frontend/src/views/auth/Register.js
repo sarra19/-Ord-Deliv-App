@@ -5,10 +5,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useState } from "react";
 import styles from "./styles.module.css";
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function Register() {
   const history = useHistory();
-
+  const [capVal,setCapVal]= useState(null)
   const validationSchema = Yup.object({
     prenom: Yup.string()
       .required('Prénom est requis')
@@ -24,7 +25,6 @@ export default function Register() {
       .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
       .matches(/[0-9]/, 'Le mot de passe doit contenir au moins un chiffre')
       .matches(/[@$!%*?&#-]/, 'Le mot de passe doit contenir au moins un caractère spécial'),
-    role: Yup.string().oneOf(['client', 'admin', 'livreur'], 'Le rôle est requis').required('Rôle est requis'),
   });
   const [error, setError] = useState("");
 	const [msg, setMsg] = useState("");
@@ -35,7 +35,7 @@ export default function Register() {
       nom: '',
       email: '',
       mdpass: '',
-      role: '',
+      role: 'client',
     },
     validationSchema: validationSchema,
     
@@ -43,10 +43,11 @@ export default function Register() {
       try {
         const url = 'http://localhost:5000/api/user';
         const { data: res } = await axios.post(url, values);
-        history.push('/auth/login');
-        alert('Inscription réussie !');
+        alert(res.message);
         console.log(res.message);
         setMsg(res.message);
+       history.push('/auth/login');
+
       } catch (error) {
         if (error.response) {
           if (error.response.status >= 400 && error.response.status < 500) {
@@ -176,31 +177,14 @@ export default function Register() {
                     <div className="text-red-500 text-xs">{formik.errors.mdpass}</div>
                   ) : null}
                 </div>
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="role">
-                    Rôle
-                  </label>
-                  <select
-                    id="role"
-                    name="role"
-                    className="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.role}
-                  >
-                    <option value="" label="Choisir un rôle" />
-                    <option value="client" label="Client" />
-                    <option value="admin" label="Admin" />
-                    <option value="livreur" label="Livreur" />
-                  </select>
-                  {formik.touched.role && formik.errors.role ? (
-                    <div className="text-red-500 text-xs">{formik.errors.role}</div>
-                  ) : null}
-                </div>
+                <ReCAPTCHA
+    sitekey="6LemURcqAAAAANcfK7SEk_yhng-UMazJZh3Y7iE3"
+    onChange={val =>setCapVal(val) }
+  />
                 {error && <div className={styles.error_msg}>{error}</div>}
 						{msg && <div className={styles.success_msg}>{msg}</div>}
                 <div className="text-center mt-6">
-                  <button
+                  <button disabled={!capVal}
                     className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                     type="submit"
                   >
