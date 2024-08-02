@@ -1251,6 +1251,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgba(30, 41, 59, var(--tw-bg-opacity));
 }
+.bg-green-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(34, 197, 94, var(--tw-bg-opacity));
+}
 
 .active\:bg-indigo-600:active {
   --tw-bg-opacity: 1;

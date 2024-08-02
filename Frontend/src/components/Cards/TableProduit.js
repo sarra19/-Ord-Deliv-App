@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { getAllProduits } from "../../Services/ApiProduit";
+import { getAllProduits,deleteProduit } from "../../Services/ApiProduit";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export default function TableProduit({ color }) {
   const [produits, setProduits] = useState([]);
@@ -17,6 +18,14 @@ export default function TableProduit({ color }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewProduit({ ...newProduit, [name]: value });
+  };
+  const handleDelete = async (id) => {
+    try {
+      await deleteProduit(id);
+      setProduits(produits.filter(produit => produit._id !== id));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const getProduits = useCallback(async () => {
@@ -54,13 +63,14 @@ export default function TableProduit({ color }) {
               </h3>
             </div>
             <div className="flex-shrink-0 ml-auto">
-              <button
-                className="bg-lightBlue-600 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-              >
-                Ajouter
-              </button>
-            </div>
+      <a
+        href="/admin/addProd"
+        className="bg-green-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 flex items-center"
+      >
+        <i className="fas fa-box-open mr-2"></i>
+        Ajouter Produit
+      </a>
+    </div>
           </div>
         </div>
 
@@ -144,7 +154,7 @@ export default function TableProduit({ color }) {
                       }
                     >
                       <img
-                        src={produit.imageURL}
+                        src={produit.imageURL ? `http://localhost:5000/${produit.imageURL}` : 'http://localhost:5000/uploads/produit.png'}
                         className="h-12 w-12 bg-white rounded-full border"
                         alt="..."
                       />
@@ -168,18 +178,20 @@ export default function TableProduit({ color }) {
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                     <button
-                      className="bg-lightBlue-600 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      onClick={() => handleDelete(produit._id)}
+                      className="bg-red-600 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                       type="button"
                     >
-                      Supprimer
+                      <i className="fas fa-trash-alt"></i> Supprimer
                     </button>
-                    <button
-                      className="bg-lightBlue-600 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                      type="button"
+                    <a
+  href={`/admin/ModifyProd/${produit._id}`}
+  className="bg-lightBlue-600 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     >
-                      Modifier
-                    </button>
+                      <i className="fas fa-edit"></i> Modifier
+                    </a>
                   </td>
+
                 </tr>
               ))}
             </tbody>

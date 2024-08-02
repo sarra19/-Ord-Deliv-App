@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import TableDropdown from "components/Dropdowns/TableDropdown.js";
-import { getAllUsers } from "../../Services/ApiUser";
+import { getAllUsers, deleteUser } from "../../Services/ApiUser";
 
 export default function CardTable({ color }) {
   const [users, setUsers] = useState([]);
@@ -10,7 +10,7 @@ export default function CardTable({ color }) {
     prenom: "",
     nom: "",
     email: "",
-    role: "", 
+    role: "",
     adresse: "",
     photoProfile: "",
     dateNaissance: "",
@@ -27,7 +27,7 @@ export default function CardTable({ color }) {
   const getUsers = useCallback(async () => {
     try {
       const res = await getAllUsers();
-      setUsers(res.data );
+      setUsers(res.data);
     } catch (err) {
       console.log(err);
       setUsers([]);
@@ -38,6 +38,14 @@ export default function CardTable({ color }) {
     getUsers();
   }, [getUsers]);
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteUser(id);
+      setUsers(users.filter(user => user._id !== id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <div
@@ -46,40 +54,41 @@ export default function CardTable({ color }) {
           (color === "light" ? "bg-white" : "bg-lightBlue-900 text-white")
         }
       >
-       <div className="rounded-t mb-0 px-4 py-3 border-0">
-  <div className="flex flex-wrap items-center">
-    <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-      <h3
-        className={
-          "font-semibold text-lg " +
-          (color === "light" ? "text-blueGray-700" : "text-white")
-        }
-      >
-        List d'utilisateurs
-      </h3>
-    </div>
-    <div className="flex-shrink-0 ml-auto">
-      <button
-        className="bg-lightBlue-600 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-        type="button"
-      >
-        Ajouter
-      </button>
-    </div>
-  </div>
-</div>
+        <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="flex flex-wrap items-center">
+            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-blueGray-700" : "text-white")
+                }
+              >
+                List d'utilisateurs
+              </h3>
+            </div>
+            <div className="flex-shrink-0 ml-auto">
+              <a
+                href="/admin/addUser"
+                className="bg-green-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 flex items-center"
+              >
+                <i className="fas fa-user-plus mr-2"></i>
+                Ajouter Utilisateur
+              </a>
+            </div>
+          </div>
+        </div>
 
         <div className="block w-full overflow-x-auto">
           <table className="items-center w-full bg-transparent border-collapse">
             <thead>
               <tr>
-              <th className={
+                <th className={
                   "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
                   (color === "light"
                     ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
                     : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
                 }>
-                  
+
                 </th>
                 <th className={
                   "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
@@ -129,7 +138,7 @@ export default function CardTable({ color }) {
                 }>
                   Action
                 </th>
-                
+
                 <th className={
                   "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
                   (color === "light"
@@ -149,10 +158,11 @@ export default function CardTable({ color }) {
                         : "text-white")
                     }>
                       <img
-                        src={`http://localhost:5000/images/${user.photoProfile}`}
+                        src={user.photoProfile ? `http://localhost:5000/${user.photoProfile}` : 'http://localhost:5000/uploads/default.png'}
                         className="h-12 w-12 bg-white rounded-full border"
-                        alt="..."
-                      /> 
+                        alt="User Profile"
+                      />
+
                     </span>
                   </th>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -172,18 +182,20 @@ export default function CardTable({ color }) {
                       <span className="mr-2">{user.tel}</span>
                     </div>
                   </td>
-                  <td>
-                  <button
-                className="bg-lightBlue-600 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-              >
-                      Supprimer
-                    </button>
+                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                     <button
-                className="bg-lightBlue-600 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-              >Modifier</button>
-               
+                      onClick={() => handleDelete(user._id)}
+                      className="bg-red-600 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                      type="button"
+                    >
+                      <i className="fas fa-trash-alt"></i> Supprimer
+                    </button>
+                    <a
+                      href={`/admin/ModifyUser/${user._id}`}
+                      className="bg-lightBlue-600 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                    >
+                      <i className="fas fa-edit"></i> Modifier
+                    </a>
                   </td>
                   {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
                     <TableDropdown />

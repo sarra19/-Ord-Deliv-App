@@ -70,6 +70,7 @@ app.use('/api/produit', produitRouter);
 app.use("/", googleAuth);
 // Middleware de journalisation
 //app.use(logger("dev"));
+app.use("/uploads", express.static("uploads")); // Servir les fichiers statiques
 
 // Middleware pour initialiser Passport
 //app.use(passport.initialize());

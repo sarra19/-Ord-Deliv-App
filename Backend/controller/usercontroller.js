@@ -128,11 +128,27 @@ async function getbyname(req,res){
 
 async function UpdateUser(req, res){
   try {
-     await User.findByIdAndUpdate(req.params.id, req.body);
-     res.status(200).send("data updated")
+    const userId = req.params.id;
+    const updates = req.body; // Get the other fields from the request body
 
-  } catch (err) {
-      res.status(400).json(err);
+    if (req.file) {
+      // Handle file upload
+      updates.photoProfile = req.file.path; // Store file path in the database or wherever needed
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+
+    if (!updatedUser) {
+      return res.status(404).send('User not found');
+    }
+
+    res.json({
+      message: 'User updated successfully',
+      data: updatedUser
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
   }
 }
 async function deleteUser (req, res) {
