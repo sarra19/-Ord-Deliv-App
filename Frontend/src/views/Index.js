@@ -137,7 +137,7 @@ export default function Index() {
                   JavaScript.
                 </p>
                 <Link to="/" className="font-bold text-blueGray-700 mt-8">
-                  Check Motocycle!
+                  Check SarraVista !
                 </Link>
               </div>
 
