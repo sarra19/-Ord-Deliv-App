@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { getAllProduits,deleteProduit } from "../../Services/ApiProduit";
+import { getAllProduits, deleteProduit } from "../../Services/ApiProduit";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export default function TableProduit({ color }) {
@@ -8,7 +8,7 @@ export default function TableProduit({ color }) {
 
   const [newProduit, setNewProduit] = useState({
     nomProd: "",
-    imageURL: "",
+    image: "",
     prix: 0,
     quantite: 0,
     taille: "",
@@ -63,14 +63,14 @@ export default function TableProduit({ color }) {
               </h3>
             </div>
             <div className="flex-shrink-0 ml-auto">
-      <a
-        href="/admin/addProd"
-        className="bg-green-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 flex items-center"
-      >
-        <i className="fas fa-box-open mr-2"></i>
-        Ajouter Produit
-      </a>
-    </div>
+              <a
+                href="/admin/addProd"
+                className="bg-green-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 flex items-center"
+              >
+                <i className="fas fa-box-open mr-2"></i>
+                Ajouter Produit
+              </a>
+            </div>
           </div>
         </div>
 
@@ -154,7 +154,7 @@ export default function TableProduit({ color }) {
                       }
                     >
                       <img
-                        src={produit.imageURL ? `http://localhost:5000/${produit.imageURL}` : 'http://localhost:5000/uploads/produit.png'}
+                        src={produit.image ? `http://localhost:5000/${produit.image}` : 'http://localhost:5000/uploads/produit.png'}
                         className="h-12 w-12 bg-white rounded-full border"
                         alt="..."
                       />
@@ -185,8 +185,8 @@ export default function TableProduit({ color }) {
                       <i className="fas fa-trash-alt"></i> Supprimer
                     </button>
                     <a
-  href={`/admin/ModifyProd/${produit._id}`}
-  className="bg-lightBlue-600 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                      href={`/admin/ModifyProd/${produit._id}`}
+                      className="bg-lightBlue-600 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     >
                       <i className="fas fa-edit"></i> Modifier
                     </a>

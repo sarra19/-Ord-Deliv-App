@@ -3,7 +3,7 @@ const { boolean } = require("yup");
 const Schema = mongo.Schema;
 const Produit = new Schema({
   nomProd: String,
-  imageURL: String,
+  image: String,
   categorie: String,
   prix: Number,
   quantite: Number,

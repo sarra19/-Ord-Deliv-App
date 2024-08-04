@@ -4,13 +4,14 @@ const ProduitController = require("../controller/produitcontroller");
 const multer = require("multer");
 const path = require("path");
 
-// Configuration de stockage Multer
+// Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, ""); // Dossier où les fichiers seront enregistrés
+    cb(null, 'uploads/'); // Directory to save files
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); // File naming
   }
 });
 

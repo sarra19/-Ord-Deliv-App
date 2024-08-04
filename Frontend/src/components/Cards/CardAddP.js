@@ -9,11 +9,12 @@ export default function CardAddP() {
   const history = useHistory();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
+
   const validateFileType = (file, allowedTypes) => {
     if (!file) return false;
     return allowedTypes.includes(file.type);
   };
-  
+
   const validationSchema = Yup.object({
     nomProd: Yup.string().required('Nom du produit est requis'),
     image: Yup.mixed().required('Image est requise').test(
@@ -31,7 +32,7 @@ export default function CardAddP() {
     video: Yup.mixed().test(
       'fileType',
       'Format de vidéo invalide. Seul le format mp4 est autorisé.',
-      value => validateFileType(value, ['video/mp4'])
+      value => !value || validateFileType(value, ['video/mp4'])
     ),
     enStock: Yup.boolean().required('État de stock est requis'),
   });
@@ -54,7 +55,9 @@ export default function CardAddP() {
     onSubmit: async (values) => {
       const formData = new FormData();
       Object.keys(values).forEach(key => {
-        formData.append(key, values[key]);
+        if (values[key]) {
+          formData.append(key, values[key]);
+        }
       });
 
       try {
@@ -79,6 +82,11 @@ export default function CardAddP() {
     },
   });
 
+  const handleFileChange = (event, type) => {
+    const file = event.currentTarget.files[0];
+    formik.setFieldValue(type, file);
+  };
+
   return (
     <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
       <div className="rounded-t bg-white mb-0 px-6 py-6">
@@ -98,6 +106,7 @@ export default function CardAddP() {
             Informations Produit
           </h6>
           <div className="flex flex-wrap">
+            {/* Nom du Produit */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="nomProd">
@@ -118,6 +127,8 @@ export default function CardAddP() {
                 ) : null}
               </div>
             </div>
+
+            {/* Catégorie */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="categorie">
@@ -141,6 +152,8 @@ export default function CardAddP() {
                 ) : null}
               </div>
             </div>
+
+            {/* Prix */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="prix">
@@ -161,6 +174,8 @@ export default function CardAddP() {
                 ) : null}
               </div>
             </div>
+
+            {/* Quantité */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="quantite">
@@ -181,6 +196,8 @@ export default function CardAddP() {
                 ) : null}
               </div>
             </div>
+
+            {/* Marque */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="marque">
@@ -204,53 +221,53 @@ export default function CardAddP() {
                 ) : null}
               </div>
             </div>
+
+            {/* Taille */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="taille">
                   Taille
                 </label>
-                <select
+                <input
+                  type="text"
                   id="taille"
                   name="taille"
                   className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  placeholder="Taille"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.taille}
-                >
-                  <option value="" label="Sélectionnez une taille" />
-                  <option value="Small" label="Petit" />
-                  <option value="Medium" label="Moyen" />
-                  <option value="Large" label="Grand" />
-                </select>
+                />
                 {formik.touched.taille && formik.errors.taille ? (
                   <div className="text-red-500 text-xs">{formik.errors.taille}</div>
                 ) : null}
               </div>
             </div>
+
+            {/* Couleur */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="couleur">
                   Couleur
                 </label>
-                <select
+                <input
+                  type="text"
                   id="couleur"
                   name="couleur"
                   className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  placeholder="Couleur"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.couleur}
-                >
-                  <option value="" label="Sélectionnez une couleur" />
-                  <option value="Red" label="Rouge" />
-                  <option value="Blue" label="Bleu" />
-                  <option value="Green" label="Vert" />
-                </select>
+                />
                 {formik.touched.couleur && formik.errors.couleur ? (
                   <div className="text-red-500 text-xs">{formik.errors.couleur}</div>
                 ) : null}
               </div>
             </div>
-            <div className="w-full lg:w-12/12 px-4">
+
+            {/* Description */}
+            <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="description">
                   Description
@@ -258,9 +275,8 @@ export default function CardAddP() {
                 <textarea
                   id="description"
                   name="description"
-                  rows="4"
                   className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  placeholder="Description du produit"
+                  placeholder="Description"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.description}
@@ -270,6 +286,8 @@ export default function CardAddP() {
                 ) : null}
               </div>
             </div>
+
+            {/* Image */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="image">
@@ -279,14 +297,22 @@ export default function CardAddP() {
                   type="file"
                   id="image"
                   name="image"
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  onChange={(event) => formik.setFieldValue('image', event.currentTarget.files[0])}
+                  className="hidden"
+                  onChange={(event) => handleFileChange(event, 'image')}
                 />
+                <label
+                  htmlFor="image"
+                  className="flex items-center justify-center border-2 border-gray-300 border-dashed rounded-lg py-3 px-6 cursor-pointer bg-white shadow-sm hover:bg-gray-50"
+                >
+                  <span className="text-gray-600">Choisir une image</span>
+                </label>
                 {formik.touched.image && formik.errors.image ? (
                   <div className="text-red-500 text-xs">{formik.errors.image}</div>
                 ) : null}
               </div>
             </div>
+
+            {/* Vidéo */}
             <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                 <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="video">
@@ -296,14 +322,22 @@ export default function CardAddP() {
                   type="file"
                   id="video"
                   name="video"
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  onChange={(event) => formik.setFieldValue('video', event.currentTarget.files[0])}
+                  className="hidden"
+                  onChange={(event) => handleFileChange(event, 'video')}
                 />
+                <label
+                  htmlFor="video"
+                  className="flex items-center justify-center border-2 border-gray-300 border-dashed rounded-lg py-3 px-6 cursor-pointer bg-white shadow-sm hover:bg-gray-50"
+                >
+                  <span className="text-gray-600">Choisir une vidéo</span>
+                </label>
                 {formik.touched.video && formik.errors.video ? (
                   <div className="text-red-500 text-xs">{formik.errors.video}</div>
                 ) : null}
               </div>
             </div>
+
+            {/* En Stock */}
             <div className="w-full px-4">
               <div className="relative flex items-center mb-3">
                 <input
@@ -332,6 +366,8 @@ export default function CardAddP() {
               Ajouter Produit
             </button>
           </div>
+          {error && <div className="text-red-500 text-center mt-4">{error}</div>}
+          {msg && <div className="text-green-500 text-center mt-4">{msg}</div>}
         </form>
       </div>
     </div>
