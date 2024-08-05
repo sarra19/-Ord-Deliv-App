@@ -15,6 +15,14 @@ const Produit = new Schema({
   enStock: Boolean,
 
 
+  reviews: [
+    {
+        userId: {type: Schema.Types.ObjectId, ref: 'User'},
+        review: String
+    }
+],
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User'},
+  updatedAt: Date,
 
-});
-module.exports = mongo.model("produit", Produit);
+}, { timestamps: true });
+module.exports = mongo.model("Produit", Produit);

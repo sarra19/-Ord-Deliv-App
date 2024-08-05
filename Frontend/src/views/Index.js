@@ -19,7 +19,7 @@ export default function Index() {
             className="absolute top-0 w-full h-full bg-center bg-cover"
             style={{
               backgroundImage:
-                "url('https://wallpaper.forfun.com/fetch/e0/e0ce7616ef2450f79e42f5f1567a66fe.jpeg')",
+              "url(" + require("assets/img/handmade.jpg").default + ")",
             }}
           >
             <span

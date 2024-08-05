@@ -1,22 +1,65 @@
-const mongo = require("mongoose");
-const { boolean } = require("yup");
-const Schema = mongo.Schema;
-const Order = new Schema({
-    status: {
-        type: String, 
-        enum: OrderStatus.orderStatus,
+const mongoose = require("mongoose");
+// A
+const orderSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    cart:{
-        type:Schema.Types.ObjectId,
-        ref:"Cart",
+    addressId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserAddress.address",
+      required: true,
+    },
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+    items: [
+      {
+        produitId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Produit",
+        },
+        payablePrice: {
+          type: Number,
+          required: true,
+        },
+        purchasedQty: {
+          type: Number,
+          required: true,
+        },
       },
-      dateOrd: {
-        type: Date,
-        required: true,
-        default: Date.now
+    ],
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "completed", "cancelled", "refund"],
+      required: true,
+    },
+    paymentType: {
+      type: String,
+      enum: ["cod", "card"],
+      required: true,
+    },
+    orderStatus: [
+      {
+        type: {
+          type: String,
+          enum: ["ordered", "packed", "shipped", "delivered"],
+          default: "ordered",
+        },
+        date: {
+          type: Date,
+        },
+        isCompleted: {
+          type: Boolean,
+          default: false,
+        },
       },
-      dateLiv: {
-        type: Date
-      }
-});
-module.exports = mongo.model("order", Order);
+    ],
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Order", orderSchema);

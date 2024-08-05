@@ -165,21 +165,21 @@ export default function Landing() {
                   className="w-full sm:w-6/12 md:w-4/12 lg:w-3/12 px-4 mb-8"
                 >
                   <div className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-                    <img
-                      src={product.image ? `http://localhost:5000/${product.image}` : 'http://localhost:5000/uploads/produit.png'}
-                      alt={product.nomProd}
-                      className="w-full h-32 object-cover"
-                    />
+  <img
+    src={product.image ? `http://localhost:5000/${product.image}` : 'http://localhost:5000/uploads/produit.png'}
+    alt={product.nomProd}
+    className="w-full h-48 object-cover"
+  />
                     <div className="p-6 flex flex-col items-center">
                       <h3 className="text-xl font-semibold mb-2 text-center">{product.nomProd}</h3>
                       <p className="text-gray-900 font-bold text-lg mb-2 text-center">{product.prix} TND</p>
                       <p className="text-gray-600 mb-4 text-center">{product.quantite} en stock</p>
                       <a
                         href={`/product/${product._id}`}
-                        className={`inline-block text-white font-bold px-6 py-3 rounded ${product.enStock ? 'bg-lightBlue-800 hover:bg-lightBlue-600' : 'bg-gray-400 cursor-not-allowed'}`}
+                        className={`inline-block text-sm text-white font-bold px-2 py-2 mb-3 rounded ${product.enStock ? 'bg-lightBlue-800 hover:bg-lightBlue-600' : 'bg-red-500 cursor-not-allowed'}`}
                         style={{ pointerEvents: product.enStock ? 'auto' : 'none' }}
                       >
-                        {product.enStock ? 'Achetez Maintenant' : 'Rupture de Stock'}
+                        {product.enStock ? 'Ajoutez au panier' : 'Rupture de Stock'}
                       </a>
                     </div>
                   </div>

@@ -1,13 +1,15 @@
-const mongo = require("mongoose");
-const { boolean } = require("yup");
-const Schema = mongo.Schema;
-const Cart = new Schema({
- NumberProd:Number,
- lineItems: [{
-    type: Schema.Types.ObjectId,
-    ref: "LineItem",
-    required: true
-  }]
+const mongoose = require('mongoose');
 
-});
-module.exports = mongo.model("cart", Cart);
+const cartSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    cartItems: [
+        {
+            produit: { type: mongoose.Schema.Types.ObjectId, ref: 'Produit', required: true },
+            quantity: { type: Number, default: 1 },
+            //price: { type: Number, required: true }
+        }
+    ]
+}, { timestamps: true });
+
+
+module.exports = mongoose.model('Cart', cartSchema);

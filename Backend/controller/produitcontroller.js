@@ -10,14 +10,14 @@ async function add(req, res) {
     const image = req.files['image'] ? req.files['image'][0].path : null;
     const video = req.files['video'] ? req.files['video'][0].path : null;
 
-    // Create a new product object with form data and file paths
+    // Create a new produit object with form data and file paths
     const produitData = {
       ...req.body,
       image: image,
       video: video
     };
 
-    // Create and save the new product
+    // Create and save the new produit
     const produit = new Produit(produitData);
     await produit.save();
 

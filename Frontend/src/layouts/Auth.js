@@ -25,7 +25,7 @@ export default function Auth() {
             className="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full"
             style={{
               backgroundImage:
-                "url(" + require("assets/img/login1.png").default + ")",
+                "url(" + require("assets/img/login1.jpg").default + ")",
               backgroundSize: "cover", // Added this line to enlarge the background image
             }}
           ></div>
