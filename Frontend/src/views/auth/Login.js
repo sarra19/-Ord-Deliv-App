@@ -28,8 +28,10 @@ export default function Login() {
       try {
         const url = 'http://localhost:5000/api/auth';
         const { data: res } = await axios.post(url, values);
-        localStorage.setItem("token", res.data);
-        history.push('/'); // Redirect to a dashboard or home page upon successful login
+        // Store token, userId, and role in local storage
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('userId', res.data.userId);
+        localStorage.setItem('role', res.data.role); history.push('/'); // Redirect to a dashboard or home page upon successful login
         alert('Connexion réussie !');
         console.log(res.message);
       } catch (error) {

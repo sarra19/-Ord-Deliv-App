@@ -25,8 +25,14 @@ async function auth (req, res)  {
 		}
 
 		const token = user.generateAuthToken();
-		res.status(200).send({ data: token, message: "Connexion réussie" });
-	} catch (error) {
+		res.status(200).send({
+            data: {
+                token,
+                userId: user._id,
+                role: user.role
+            },
+            message: 'Connexion réussie'
+        });	} catch (error) {
 		console.error("Erreur de connexion:", error);
 		res.status(500).send({ message: "Erreur interne du serveur" });
 	}

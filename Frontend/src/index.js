@@ -14,6 +14,7 @@ import Landing from "views/Landing.js";
 import Profile from "views/Profile.js";
 import Index from "views/Index.js";
 import EmailVerify from "views/auth/EmailVerify/index";
+import Panier from "views/Panier";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -22,6 +23,8 @@ ReactDOM.render(
       <Route path="/admin" component={Admin} />
       <Route path="/auth" component={Auth} />
       {/* add routes without layouts */}
+      <Route path="/panier" exact component={Panier} />
+
       <Route path="/landing" exact component={Landing} />
       <Route path="/profile" exact component={Profile} />
       <Route path="/user/:id/verify/:token"  exact component={EmailVerify} />

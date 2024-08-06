@@ -5,6 +5,7 @@ import Footer from "components/Footers/Footer.js";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import SpecialCase from "components/SpecialCase/SpecialCase";
 import { getAllProduits } from "../Services/ApiProduit";
+import { addToCart } from "../Services/ApiCart"; // Import the addToCart service
 
 export default function Landing() {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,8 @@ export default function Landing() {
   const [colorFilter, setColorFilter] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
   const [sortBy, setSortBy] = useState("");
+
+  const userId = "66a8be477400aae62217e2dc"; // Replace with the actual user ID
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -58,6 +61,16 @@ export default function Landing() {
     }
 
     setFilteredProducts(updatedProducts);
+  };
+
+  const handleAddToCart = async (produitId) => {
+    try {
+      await addToCart(userId, produitId, 1); // Assuming quantity is 1 for simplicity
+      alert("Produit ajouté au panier !");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout au panier:", error);
+      alert("Erreur lors de l'ajout au panier.");
+    }
   };
 
   const slides = [
@@ -165,22 +178,22 @@ export default function Landing() {
                   className="w-full sm:w-6/12 md:w-4/12 lg:w-3/12 px-4 mb-8"
                 >
                   <div className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-  <img
-    src={product.image ? `http://localhost:5000/${product.image}` : 'http://localhost:5000/uploads/produit.png'}
-    alt={product.nomProd}
-    className="w-full h-48 object-cover"
-  />
+                    <img
+                      src={product.image ? `http://localhost:5000/${product.image}` : 'http://localhost:5000/uploads/produit.png'}
+                      alt={product.nomProd}
+                      className="w-full h-48 object-cover"
+                    />
                     <div className="p-6 flex flex-col items-center">
                       <h3 className="text-xl font-semibold mb-2 text-center">{product.nomProd}</h3>
                       <p className="text-gray-900 font-bold text-lg mb-2 text-center">{product.prix} TND</p>
                       <p className="text-gray-600 mb-4 text-center">{product.quantite} en stock</p>
-                      <a
-                        href={`/product/${product._id}`}
+                      <button
+                        onClick={() => handleAddToCart(product._id)}
                         className={`inline-block text-sm text-white font-bold px-2 py-2 mb-3 rounded ${product.enStock ? 'bg-lightBlue-800 hover:bg-lightBlue-600' : 'bg-red-500 cursor-not-allowed'}`}
                         style={{ pointerEvents: product.enStock ? 'auto' : 'none' }}
                       >
                         {product.enStock ? 'Ajoutez au panier' : 'Rupture de Stock'}
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
