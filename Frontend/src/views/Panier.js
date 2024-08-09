@@ -8,7 +8,6 @@ export default function Panier() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState("66a8be477400aae62217e2dc");
-  const [orderError, setOrderError] = useState(null);
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -43,6 +42,7 @@ export default function Panier() {
   const calculateTotalPrice = () => {
     return cartItems.reduce((total, item) => total + (item.produit.prix * item.quantity), 0);
   };
+
 
 
   if (loading) {
@@ -115,20 +115,20 @@ export default function Panier() {
               <div className="mt-6 text-right">
                 <h4 className="text-lg font-semibold">Total: {calculateTotalPrice()} TND</h4>
                 <button
-                  className="bg-green-500 active:bg-green-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none ease-linear transition-all duration-150 mt-4"
+                  className={`bg-green-500 active:bg-green-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none ease-linear transition-all duration-150 mt-4 ${cartItems.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                  href="/adresse"
+
                 >
                   Passer la Commande
                 </button>
               </div>
             )}
-            {orderError && (
-              <div className="text-center mt-5 text-red-500">Order Error: {orderError.message}</div>
-            )}
+          
           </div>
         </section>
+       
       </div>
       <Footer />
     </>
   );
 }
- 

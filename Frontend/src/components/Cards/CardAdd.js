@@ -1,13 +1,11 @@
 import React from "react";
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useState } from "react";
 import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function CardAdd() {
-  const history = useHistory();
   const [capVal, setCapVal] = useState(null);
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");

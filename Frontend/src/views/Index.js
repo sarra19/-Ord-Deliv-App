@@ -11,7 +11,7 @@ import SpecialCase from "components/SpecialCase/SpecialCase";
 export default function Index() {
   return (
     <>
-     <IndexNavbar fixed />
+      <IndexNavbar fixed />
       <main>
 
         <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">
@@ -19,7 +19,7 @@ export default function Index() {
             className="absolute top-0 w-full h-full bg-center bg-cover"
             style={{
               backgroundImage:
-              "url(" + require("assets/img/handmade.jpg").default + ")",
+                "url(" + require("assets/img/handmade.jpg").default + ")",
             }}
           >
             <span
@@ -27,8 +27,8 @@ export default function Index() {
               className="w-full h-full absolute opacity-75 bg-black"
             ></span>
           </div>
-           {/* Add margin top to SpecialCase component */}
- <div className="mt-20">
+          {/* Add margin top to SpecialCase component */}
+          <div className="mt-20">
             <SpecialCase />
           </div>
           <div className="container relative mx-auto">
@@ -43,7 +43,7 @@ export default function Index() {
                   </p>
                 </div>
               </div>
-             
+
             </div>
           </div>
 

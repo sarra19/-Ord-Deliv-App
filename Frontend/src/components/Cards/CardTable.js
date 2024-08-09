@@ -1,28 +1,12 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import TableDropdown from "components/Dropdowns/TableDropdown.js";
 import { getAllUsers, deleteUser } from "../../Services/ApiUser";
 
 export default function CardTable({ color }) {
   const [users, setUsers] = useState([]);
 
-  const [newUser, setNewUser] = useState({
-    prenom: "",
-    nom: "",
-    email: "",
-    role: "",
-    adresse: "",
-    photoProfile: "",
-    dateNaissance: "",
-    tel: "",
-    Genre: "",
-    verified: false,
-  });
+  
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewUser({ ...newUser, [name]: value });
-  };
 
   const getUsers = useCallback(async () => {
     try {

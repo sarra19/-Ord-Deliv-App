@@ -6,19 +6,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 export default function TableProduit({ color }) {
   const [produits, setProduits] = useState([]);
 
-  const [newProduit, setNewProduit] = useState({
-    nomProd: "",
-    image: "",
-    prix: 0,
-    quantite: 0,
-    taille: "",
-    enStock: false,
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewProduit({ ...newProduit, [name]: value });
-  };
+
+ 
   const handleDelete = async (id) => {
     try {
       await deleteProduit(id);
