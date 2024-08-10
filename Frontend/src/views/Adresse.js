@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getById } from "../Services/ApiUser";
 
 // components
 import Footer from "components/Footers/Footer.js";
@@ -20,28 +21,88 @@ export default function Adresse() {
     addressType: "home",
   });
 
+  const [userInfo, setUserInfo] = useState(null);
+
+  const userId = "66a8be477400aae62217e2dc"; // Hardcoded userId; replace with dynamic value if needed
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch user info
+        const userResponse = await getById(userId);
+        setUserInfo(userResponse.data);
+
+        // Fetch address data
+        const response = await fetch(`http://localhost:5000/api/address/${userId}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          setFormData({
+            ...data, // Ensure data matches the field names
+            addressType: data.addressType || "home",
+           // addressId: data._id || null, // Set addressId if available
+          });
+        } else {
+          console.error("Erreur lors de la récupération de l'adresse :", data.message);
+        }
+      } catch (error) {
+        console.error("Erreur de réseau :", error);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit form data to backend
-    fetch("http://localhost:5000/api/address", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    
+    const url = userInfo.addressId
+      ? `http://localhost:5000/api/address/update/${userInfo.addressId}`
+      : `http://localhost:5000/api/address/addToUser`;
+    const method = userInfo.addressId ? "PUT" : "POST";
+
+    const payload = {
+      userId: userId,
+      address: formData,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
+      const data = await response.json();
+      if (response.ok) {
+        alert(userInfo.addressId ? "Adresse mise à jour avec succès !" : "Adresse ajoutée avec succès !");
+        // Optionally, reset the form or redirect the user
+        setFormData({
+          name: "",
+          mobileNumber: "",
+          pinCode: "",
+          locality: "",
+          address: "",
+          cityDistrictTown: "",
+          state: "",
+          landmark: "",
+          alternatePhone: "",
+          addressType: "home",
+        });
+      } else {
+        console.error("Erreur :", data.message);
+        alert("Une erreur s'est produite lors de l'ajout / mise à jour de l'adresse.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Une erreur s'est produite lors de l'ajout / mise à jour de l'adresse.");
+    }
   };
 
   return (
@@ -61,7 +122,6 @@ export default function Adresse() {
               className="w-full h-full absolute opacity-75 bg-black"
             ></span>
           </div>
-          {/* Add margin top to SpecialCase component */}
           <div className="mt-20">
             <SpecialCase />
           </div>
@@ -70,7 +130,7 @@ export default function Adresse() {
               <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
                 <div className="pr-12">
                   <h1 className="text-white font-semibold text-5xl">
-                    Completer vos coordonnées.
+                    Complétez vos coordonnées.
                   </h1>
                   <p className="mt-4 text-lg text-blueGray-200">
                     Entrez votre adresse.
@@ -120,182 +180,36 @@ export default function Adresse() {
                     Informations d'adresse
                   </h6>
                   <div className="flex flex-wrap">
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="name">
-                          Nom<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Nom"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="mobileNumber">
-                          Numéro de téléphone<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="mobileNumber"
-                          name="mobileNumber"
-                          value={formData.mobileNumber}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Numéro de téléphone"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="pinCode">
-                          Code postal<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="pinCode"
-                          name="pinCode"
-                          value={formData.pinCode}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Code postal"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="locality">
-                          Localité<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="locality"
-                          name="locality"
-                          value={formData.locality}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Localité"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="address">
-                          Adresse<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="address"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Adresse"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="cityDistrictTown">
-                          Ville/District/Town<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="cityDistrictTown"
-                          name="cityDistrictTown"
-                          value={formData.cityDistrictTown}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Ville/District/Town"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="state">
-                          État<span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="state"
-                          name="state"
-                          value={formData.state}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="État"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="landmark">
-                          Point de repère (facultatif)
-                        </label>
-                        <input
-                          type="text"
-                          id="landmark"
-                          name="landmark"
-                          value={formData.landmark}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Point de repère"
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="alternatePhone">
-                          Téléphone alternatif (facultatif)
-                        </label>
-                        <input
-                          type="text"
-                          id="alternatePhone"
-                          name="alternatePhone"
-                          value={formData.alternatePhone}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          placeholder="Téléphone alternatif"
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full lg:w-6/12 px-4">
-                      <div className="relative w-full mb-3">
-                        <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="addressType">
-                          Type d'adresse<span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          id="addressType"
-                          name="addressType"
-                          value={formData.addressType}
-                          onChange={handleChange}
-                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                          required
-                        >
-                          <option value="home">Maison</option>
-                          <option value="work">Travail</option>
-                        </select>
-                      </div>
-                    </div>
+                    {Object.keys(formData).map((key) => (
+                      key !== 'addressId' && (
+                        <div className="w-full lg:w-6/12 px-4" key={key}>
+                          <div className="relative w-full mb-3">
+                            <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor={key}>
+                              {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                              {key === 'name' || key === 'mobileNumber' || key === 'pinCode' || key === 'address' || key === 'locality' || key === 'cityDistrictTown' || key === 'state' || key === 'addressType' ? <span className="text-red-500">*</span> : null}
+                            </label>
+                            <input
+                              type={key === 'pinCode' ? 'text' : 'text'}
+                              id={key}
+                              name={key}
+                              value={formData[key]}
+                              onChange={handleChange}
+                              className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                              placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
+                              required={key === 'name' || key === 'mobileNumber' || key === 'pinCode' || key === 'address' || key === 'locality' || key === 'cityDistrictTown' || key === 'state' || key === 'addressType'}
+                            />
+                          </div>
+                        </div>
+                      )
+                    ))}
                   </div>
-                  <div className="mt-6 text-center">
+
+                  <div className="text-center mt-6">
                     <button
                       type="submit"
-                      className="bg-lightBlue-600 text-white active:bg-lightBlue-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                      className="bg-lightBlue-600 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-6 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     >
-                      Soumettre
+                      {userInfo && userInfo.addressId ? "Mettre à jour" : "Ajouter"}
                     </button>
                   </div>
                 </form>
@@ -303,8 +217,8 @@ export default function Adresse() {
             </div>
           </div>
         </section>
+        <Footer />
       </main>
-      <Footer />
     </>
   );
 }

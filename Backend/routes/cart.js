@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const CartController = require("../controller/cartcontroller");
+const CartController = require("../controller/cartController");
 
 router.post('/add-to-cart', CartController.addToCart);
 // Route pour obtenir les articles du panier

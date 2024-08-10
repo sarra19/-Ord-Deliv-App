@@ -1,6 +1,6 @@
-const Order = require("../models/order");
-const Cart = require("../models/cart");
-const Address = require("../models/address");
+const Cart = require("../model/cart");
+const Address = require("../model/address");
+const Order = require("../model/Order");
 
 async function addOrder (req, res) {
   Cart.deleteOne({ user: req.user._id }).exec((error, result) => {

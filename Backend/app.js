@@ -22,6 +22,7 @@ const googleAuth = require("./routes/google-auth.js");
 const http = require("http");
 const server = http.createServer(app);
 const cartRoutes = require('./routes/cart');
+const adressRoutes = require('./routes/address');
 
 
 // Connect to MongoDB
@@ -69,6 +70,7 @@ app.use('/api/auth', authRouter);
 app.use("/api/password-reset", passwordResetRoutes);
 app.use('/api/produit', produitRouter);
 app.use('/api/cart', cartRoutes);
+app.use('/api/address', adressRoutes);
 
 app.use("/", googleAuth);
 // Middleware de journalisation

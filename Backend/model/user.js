@@ -11,7 +11,10 @@ const userSchema = new Schema({
   mdpass: {type:String,required:true},
   role: { type: String, enum: ['client', 'admin', 'livreur'], required: true }, // Ensure this field exists and is properly defined
 
-  adresse: String,
+  addressId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Address",
+  },
   photoProfile: String,
   dateNaissance: String,
   tel: Number,

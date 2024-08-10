@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// C
 const addressSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -41,7 +40,6 @@ const addressSchema = new mongoose.Schema({
   state: {
     type: String,
     required: true,
-    required: true,
   },
   landmark: {
     type: String,
@@ -55,22 +53,9 @@ const addressSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ["home", "work"],
-    required: true,
-  },
-});
+  }
+}, { timestamps: true });
 
-// B
-const userAddressSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
-    address: [addressSchema],
-  },
-  { timestamps: true }
-);
+const Address = mongoose.model("Address", addressSchema);
 
-mongoose.model("Address", addressSchema);
-module.exports = mongoose.model("UserAddress", userAddressSchema);
+module.exports = Address;

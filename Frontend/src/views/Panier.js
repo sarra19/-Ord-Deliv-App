@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 import { getCartItems, removeItem } from "../Services/ApiCart";
+import { useHistory } from "react-router-dom";
+import { getById } from "../Services/ApiUser";
 
 export default function Panier() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState("66a8be477400aae62217e2dc");
+  const history = useHistory();
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -44,6 +47,21 @@ export default function Panier() {
   };
 
 
+  const handleOrder = async () => {
+    try {
+      const userResponse = await getById(userId);
+      const user = userResponse.data;
+
+      if (!user.addressId) {
+        history.push("/adresse");
+      } else {
+        // Proceed to order confirmation or next step
+        history.push("/confirmation"); // Assuming there's a confirmation page
+      }
+    } catch (err) {
+      setError(err);
+    }
+  };
 
   if (loading) {
     return <div className="text-center mt-5">Loading...</div>;
@@ -116,8 +134,8 @@ export default function Panier() {
                 <h4 className="text-lg font-semibold">Total: {calculateTotalPrice()} TND</h4>
                 <button
                   className={`bg-green-500 active:bg-green-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none ease-linear transition-all duration-150 mt-4 ${cartItems.length === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-                  href="/adresse"
-
+                  style={{ pointerEvents: cartItems.length === 0 ? 'none' : 'auto' }}
+                  onClick={handleOrder}
                 >
                   Passer la Commande
                 </button>
