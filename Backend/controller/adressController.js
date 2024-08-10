@@ -3,7 +3,8 @@ const { User } = require("../model/user");
 
 async function addToUser(req, res) {
   try {
-    const { userId, address } = req.body;
+    const { address } = req.body;
+    const { userId } = req.params;
 
     const newAddress = new Address(address);
     await newAddress.save();

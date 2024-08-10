@@ -60,29 +60,28 @@ export default function Adresse() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const url = userInfo.addressId
+  
+    const isUpdate = userInfo && userInfo.addressId;
+    const url = isUpdate
       ? `http://localhost:5000/api/address/update/${userInfo.addressId}`
-      : `http://localhost:5000/api/address/addToUser`;
-    const method = userInfo.addressId ? "PUT" : "POST";
-
-    const payload = {
-      userId: userId,
-      address: formData,
-    };
-
+      : `http://localhost:5000/api/address/addToUser/${userId}`;
+    const method = isUpdate ? "PUT" : "POST";
+    
+    // Construct the body based on the operation
+    const body = isUpdate ? JSON.stringify(formData) : JSON.stringify({ address: formData });
+  
     try {
       const response = await fetch(url, {
         method: method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: body, 
       });
+      
       const data = await response.json();
       if (response.ok) {
-        alert(userInfo.addressId ? "Adresse mise à jour avec succès !" : "Adresse ajoutée avec succès !");
-        // Optionally, reset the form or redirect the user
+        alert(isUpdate ? "Adresse mise à jour avec succès !" : "Adresse ajoutée avec succès !");
         setFormData({
           name: "",
           mobileNumber: "",
@@ -104,6 +103,8 @@ export default function Adresse() {
       alert("Une erreur s'est produite lors de l'ajout / mise à jour de l'adresse.");
     }
   };
+  
+  
 
   return (
     <>
